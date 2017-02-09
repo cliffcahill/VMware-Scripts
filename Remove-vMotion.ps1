@@ -1,19 +1,18 @@
-##########################################################
+
+#  Remove-vMotion.ps1 - This script will get all hosts in the environment,and Disable IPV6
 #
-#VAST: Gen 3.0
-#Reference: Vblock System Logical Build Guide
-#Script: AMP Deploy 340
+#	Author Cliff Cahill
+#	
+#	
+#	
+#	Parameters 
+#		
+#		-vCenter <String[]>
+#			This is the IP address or hostname of the vCenter server
+#		-verbose <Switch>
+#			Specifies if there is verbose output
 #
-#Date: 2013-11-28 12:05:25.
-#											 
-#Customer: INEO_Site1. 					 
-#Vblock Model: 340-VNX-7600.				 
-#
-#Additional Instruction:	
-#Check cell id is correct
-#Check correct license keys have been entered in VAST
-#														 
-##########################################################
+# Version - 1.0
 
 
 param(   
@@ -21,7 +20,7 @@ param(
 
 
 
-$folderName='*',
+$PGName = "WSDC_PROD_ESX_VMOTION",
 $VMhost='*',
 $VMName = '*',
 $VMMac = '*'	
@@ -37,8 +36,8 @@ Write-Verbose "Connecting to vCenter"
 ForEach ($VMhostname in (Get-VMHost -name $VMhost)| sort) 
 
 {
-$PGName = "WSDC_PROD_ESX_VMOTION"
-$delVMP = Get-VirtualPortGroup -Name "WSDC_PROD_ESX_VMOTION" -VirtualSwitch $(Get-VirtualSwitch -VMHost $VMhostname -Name vSwitch0)
+
+$delVMP = Get-VirtualPortGroup -Name $PGName -VirtualSwitch $(Get-VirtualSwitch -VMHost $VMhostname -Name vSwitch0)
 $null = $delVMP | Remove-VirtualPortGroup -confirm:$false
 }
 
