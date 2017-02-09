@@ -1,5 +1,5 @@
 
-# Set-SSS-ON - This script will get all hosts in the environment,and Disable IPV6
+#  DisableIpv6.ps1 - This script will get all hosts in the environment,and Disable IPV6
 #
 #	Author Cliff Cahill
 #	
@@ -25,12 +25,5 @@ Param(
 #Connect to vCenter
 Write-Verbose "Connecting to vCenter"
 $server = Connect-VIServer $vCenter -credential $(get-credential)
-
-$cluster = Get-Cluster $clusterName | where {$_.name -notmatch 'AMP'}
-if (!$cluster) {Write-host -foregroundcolor red "Cluster $clusterName cannot be found"; exit}
-
-#Loop through hosts
-Write-Verbose "Get hosts and loop through enabling SSH"
-	
 
 $null = Get-VMHost | Get-VMHostNetwork | Set-VMHostNetwork -IPv6Enabled $false
