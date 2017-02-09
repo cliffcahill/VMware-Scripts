@@ -1,4 +1,4 @@
-﻿# Set-SSS-ON - This script will get all hosts in the environment,and enabled SSH
+# Enable-SSH.ps1 - This script will get all hosts in the environment,and enabled SSH
 #
 #	Author Cliff Cahill
 #	
@@ -24,17 +24,13 @@ Param(
 Write-Verbose "Connecting to vCenter"
 $server = Connect-VIServer $vCenter -credential $(get-credential)
 
-$currentLoc = Get-Location
-
 $cluster = Get-Cluster $clusterName | where {$_.name -notmatch 'AMP'}
 if (!$cluster) {Write-host -foregroundcolor red "Cluster $clusterName cannot be found"; exit}
 
 #Loop through hosts
 Write-Verbose "Get hosts and loop through enabling SSH"
-	
-	Get-VMHost | Get-VMHostService | Where { $_.Key -eq "TSM-SSH"} | Start-VMHostService
-	
- 
+Get-VMHost | Get-VMHostService | Where { $_.Key -eq "TSM-SSH"} | Start-VMHostService
+
  
 #Disconnect from vCenter
 Disconnect-VIServer $server -confirm:$false
