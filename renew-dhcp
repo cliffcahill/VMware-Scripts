@@ -1,0 +1,5 @@
+esxcli network ip interface set -e false -i vmk2
+esxcli network ip interface set -e true -i vmk2
+esxcli network ip interface set -e false -i vmk3
+esxcli network ip interface set -e true -i vmk3
+esxcli network ip interface ipv4 get
