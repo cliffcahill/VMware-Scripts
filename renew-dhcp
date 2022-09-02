@@ -16,14 +16,38 @@
 
 Param(
 	[Parameter(Mandatory=$true)]$vCenter,
-	$clusterName = '*',
-	$VMhostname ="*"
+
 )
+
+##########################################################
+function logout() {
+	Disconnect-VIServer $server -confirm:$false
+}
+##########################################################   
 
 #Connect to vCenter
 Write-Verbose "Connecting to vCenter"
 $server = Connect-VIServer $vCenter -credential $(get-credential)
-ip
-esxcli.network.ip.interface.set -e false -i vmk2
 
-esxcli network ip interface ipv4 get
+$AZ1Host = Get-VMHost | Where {($_.Name -like "sfo01*")}
+$AZ2Host = Get-VMHost | Where {($_.Name -like "sfo02*")}
+
+Foreach ($AZ1Host in (Get-VMHost | Where {($_.Name -like "sfo01*")} | sort))
+{
+$esxcli = Get-EsxCli -VMHost $AZ1Host
+$esxcli.network.ip.interface.set("False","vmk3", $null)
+$esxcli.network.ip.interface.set("True","vmk3", $null)
+$esxcli.network.ip.interface.set("False","vmk4", $null)
+$esxcli.network.ip.interface.set("True","vmk4", $null)
+}
+
+Foreach ($AZ2Host in (Get-VMHost | Where {($_.Name -like "sfo02*")} | sort))
+{
+$esxcli = Get-EsxCli -VMHost $AZ2Host
+$esxcli.network.ip.interface.set("False","vmk3", $null)
+$esxcli.network.ip.interface.set("True","vmk3", $null)
+$esxcli.network.ip.interface.set("False","vmk4", $null)
+$esxcli.network.ip.interface.set("True","vmk4", $null)
+}
+
+logout
